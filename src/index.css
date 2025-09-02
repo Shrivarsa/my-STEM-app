@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global styles */
+body {
+  @apply bg-gray-50 text-gray-800 font-sans;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;          /* full width */
+  min-height: 100vh;    /* full height */
+  margin: 0 auto;
+  padding: rem;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-md text-center p-2 m-1;
+}
+
+button {
+  @apply px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition;
+}
+
+.read-the-docs {
+  @apply text-gray-500 mt-4;
+}
+
