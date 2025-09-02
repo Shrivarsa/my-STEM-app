@@ -1,54 +1,33 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { UserProvider } from "./context/UserContext";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import DashboardLayout from "./components/Layouts/DashboardLayout";
-import { Dashboard } from "./pages/Dashboard";
-import { Lessons } from "./pages/Lessons";
-import { LessonDetail } from "./pages/LessonDetail";
-import { Progress } from "./pages/Progress";
-import { Collaboration } from "./pages/Collaboration";
-import { AdminDashboard } from "./pages/AdminDashboard";
-import { Profile } from "./pages/Profile";
-import Secure from "./components/Secure";
+import { useState } from 'react';
+import './styles/index.css';
 
-const AppRoutes = () => (
-  <Routes>
-    {/* Public routes */}
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
+function App() {
+  const [count, setCount] = useState(0);
 
-    {/* Protected routes */}
-    <Route element={<Secure />}>
-      <Route path="/" element={<DashboardLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="lessons" element={<Lessons />} />
-        <Route path="lessons/:id" element={<LessonDetail />} />
-        <Route path="progress" element={<Progress />} />
-        <Route path="collaboration" element={<Collaboration />} />
-        <Route path="admin" element={<AdminDashboard />} />
-        <Route path="profile" element={<Profile />} />
-      </Route>
-    </Route>
+  return (
+    <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-800">
+      <h1 className="text-5xl font-extrabold mb-8 text-center">
+        My STEM Hackathon App
+      </h1>
 
-    {/* Catch-all */}
-    <Route
-      path="*"
-      element={
-        <div className="text-center text-gray-500 text-xl">
-          Page Not Found
-        </div>
-      }
-    />
-  </Routes>
-);
+      <div className="w-full max-w-3xl p-8 bg-white rounded-xl shadow-lg text-center mb-8">
+        <button
+          onClick={() => setCount((count) => count + 1)}
+          className="px-8 py-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
+        >
+          Count is {count}
+        </button>
 
-const App = () => (
-  <UserProvider>
-    <Router>
-      <AppRoutes />
-    </Router>
-  </UserProvider>
-);
+        <p className="mt-6 text-gray-500 text-lg">
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+
+      <p className="text-gray-600 text-center text-lg">
+        Your app is now full width and ready to customize!
+      </p>
+    </div>
+  );
+}
 
 export default App;
