@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
-interface SecureProps {
-  user: any; // adjust if you have a User type
-  children: React.ReactNode;
-}
-
-const Secure: React.FC<SecureProps> = ({ user, children }) => {
+const Secure: React.FC = () => {
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // short delay to simulate async user check
+    // simulate async check (localStorage restore etc.)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 50); 
+    }, 50);
     return () => clearTimeout(timer);
   }, []);
 
@@ -29,8 +26,8 @@ const Secure: React.FC<SecureProps> = ({ user, children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  // ✅ will render whatever is nested inside <Secure>
+  return <Outlet />;
 };
 
 export default Secure;
-

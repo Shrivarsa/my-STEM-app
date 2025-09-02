@@ -1,100 +1,76 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { 
-  Home, 
-  BookOpen, 
-  TrendingUp, 
-  Users, 
-  Settings, 
-  Award,
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useUser } from "../context/UserContext"; // ✅ adjust path if different
+import {
+  LayoutDashboard,
+  BookOpen,
   BarChart3,
-  X
-} from 'lucide-react';
-import { useUser } from '../context/UserContext';
+  Users,
+  User,
+  Shield,
+} from "lucide-react";
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC = () => {
   const { user } = useUser();
 
-  const studentLinks = [
-    { to: '/', icon: Home, label: 'Dashboard' },
-    { to: '/lessons', icon: BookOpen, label: 'Lessons' },
-    { to: '/progress', icon: TrendingUp, label: 'Progress' },
-    { to: '/collaboration', icon: Users, label: 'Collaboration' },
-    { to: '/profile', icon: Settings, label: 'Profile' },
+  if (!user) {
+    // ✅ Fallback (shouldn’t happen often because UserProvider sets a default user)
+    return (
+      <div className="w-64 bg-gray-800 text-white p-6">
+        <p className="text-center text-gray-400">No user found</p>
+      </div>
+    );
+  }
+
+  const links = [
+    { to: "/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+    { to: "/lessons", label: "Lessons", icon: <BookOpen size={18} /> },
+    { to: "/progress", label: "Progress", icon: <BarChart3 size={18} /> },
+    { to: "/collaboration", label: "Collaboration", icon: <Users size={18} /> },
+    { to: "/profile", label: "Profile", icon: <User size={18} /> },
   ];
 
-  const adminLinks = [
-    { to: '/', icon: Home, label: 'Dashboard' },
-    { to: '/admin', icon: BarChart3, label: 'Analytics' },
-    { to: '/lessons', icon: BookOpen, label: 'Lessons' },
-    { to: '/collaboration', icon: Users, label: 'Collaboration' },
-    { to: '/profile', icon: Settings, label: 'Profile' },
-  ];
-
-  const links = user.role === 'educator' ? adminLinks : studentLinks;
+  // Add admin link if user is educator
+  if (user.role === "educator") {
+    links.push({ to: "/admin", label: "Admin", icon: <Shield size={18} /> });
+  }
 
   return (
-    <>
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={onClose}
+    <aside className="w-64 bg-gray-800 text-white flex flex-col p-6 min-h-screen">
+      {/* User Info */}
+      <div className="flex items-center space-x-3 mb-8">
+        <img
+          src={user.avatar || "https://via.placeholder.com/40"}
+          alt={user.name}
+          className="w-10 h-10 rounded-full border-2 border-gray-600"
         />
-      )}
-      
-      {/* Sidebar */}
-      <aside className={`
-        fixed left-0 top-16 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:translate-x-0 md:relative md:top-0 md:h-screen
-      `}>
-        <div className="p-6">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-1 rounded-lg hover:bg-gray-100 md:hidden"
-          >
-            <X className="w-4 h-4 text-charcoal" />
-          </button>
-          
-          <nav className="space-y-2">
-            {links.map(({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                    isActive
-                      ? 'bg-coral text-white shadow-md'
-                      : 'text-charcoal hover:bg-gray-100'
-                  }`
-                }
-                onClick={() => onClose()}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{label}</span>
-              </NavLink>
-            ))}
-          </nav>
-
-          <div className="mt-8 p-4 bg-gradient-to-r from-gold/10 to-mint/10 rounded-lg">
-            <div className="flex items-center space-x-2 mb-2">
-              <Award className="w-4 h-4 text-gold" />
-              <span className="text-sm font-semibold text-charcoal">This Week</span>
-            </div>
-            <p className="text-sm text-gray-600 mb-2">Complete 5 more lessons to earn your next badge!</p>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-mint h-2 rounded-full w-3/5"></div>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">3 of 5 completed</p>
-          </div>
+        <div>
+          <p className="font-semibold">{user.name}</p>
+          <p className="text-sm text-gray-400 capitalize">{user.role}</p>
         </div>
-      </aside>
-    </>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-2">
+        {links.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            className={({ isActive }) =>
+              `flex items-center px-3 py-2 rounded-lg transition ${
+                isActive
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-300 hover:bg-gray-700"
+              }`
+            }
+          >
+            <span className="mr-3">{link.icon}</span>
+            {link.label}
+          </NavLink>
+        ))}
+      </nav>
+    </aside>
   );
 };
+
+export default Sidebar;
