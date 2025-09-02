@@ -1,0 +1,25 @@
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-md text-center p-6 m-6 w-full max-w-3xl;
+}
+
+.btn {
+  @apply px-8 py-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition;
+}
+
+.read-the-docs {
+  @apply text-gray-500 mt-4 text-lg;
+}
